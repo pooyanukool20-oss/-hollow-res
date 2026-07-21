@@ -111,6 +111,15 @@ def list_tables():
         conn.close()
 
 
+def get_table_name(table_id):
+    conn = get_conn()
+    try:
+        row = conn.execute("SELECT name FROM tables WHERE id = ?", (table_id,)).fetchone()
+        return row["name"] if row else "?"
+    finally:
+        conn.close()
+
+
 def taken_table_ids(res_date, res_time):
     """คืนรายการ id ของโต๊ะที่ถูกจองไปแล้วในวัน+เวลาที่ระบุ"""
     conn = get_conn()

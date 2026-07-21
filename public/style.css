@@ -1,0 +1,324 @@
+:root{
+  --bg:#0b0b0d;
+  --bg2:#151517;
+  --bg3:#202024;
+  --line:#2b2b30;
+  --line2:#3d3d44;
+  --text:#f4f4f6;
+  --muted:#9a9aa2;
+  --gold:#ffffff;
+  --gold-deep:#c9c9d0;
+  --gold-soft:rgba(255,255,255,.10);
+  --rose:#e0e0e6;
+  --taken:#37373d;
+  --ok:#ffffff;
+  --font-body:'Noto Sans Thai',system-ui,-apple-system,sans-serif;
+  --font-display:'Space Grotesk','Noto Sans Thai',sans-serif;
+  --font-mono:'Space Mono',ui-monospace,monospace;
+  --r:16px;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  font-family:var(--font-body);
+  color:var(--text);
+  background:
+    radial-gradient(1200px 600px at 85% -5%, rgba(255,255,255,.05), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(255,255,255,.035), transparent 55%),
+    var(--bg);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:96px;
+}
+
+/* ---------- topbar ---------- */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px clamp(16px,4vw,40px);
+  border-bottom:1px solid var(--line);
+}
+.brand{display:flex;flex-direction:column;line-height:1}
+.brand-mark{
+  font-family:var(--font-display);font-weight:700;
+  font-size:clamp(20px,3vw,26px);letter-spacing:.32em;
+  color:var(--text);text-indent:.32em;
+}
+.brand-sub{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--gold);margin-top:6px;text-indent:.05em;
+}
+.admin-link{
+  font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;
+  color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:10px;
+  border:1px solid var(--line);transition:.18s;
+}
+.admin-link:hover{color:var(--text);border-color:var(--line2)}
+
+/* ---------- hero + gallery ---------- */
+.hero{
+  position:relative;height:clamp(160px,30vw,300px);
+  background-size:cover;background-position:center;
+  overflow:hidden;
+}
+.hero::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg, rgba(11,11,13,.15), rgba(11,11,13,.85));
+}
+.hero-overlay{
+  position:relative;z-index:1;height:100%;
+  display:flex;align-items:flex-end;justify-content:space-between;gap:12px;
+  padding:18px clamp(16px,4vw,40px);
+}
+.hero-tag{
+  font-family:var(--font-mono);font-size:12px;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--gold);margin:0;
+}
+.hero-contact{
+  font-family:var(--font-mono);font-size:12px;letter-spacing:.04em;
+  color:var(--text);text-decoration:none;white-space:nowrap;
+  padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.35);
+  background:rgba(11,11,13,.35);backdrop-filter:blur(4px);
+  transition:.18s;
+}
+.hero-contact:hover{border-color:var(--text);background:rgba(11,11,13,.55)}
+.gallery{
+  max-width:1180px;margin:0 auto;
+  padding:clamp(16px,3vw,32px) clamp(16px,3vw,32px) 0;
+}
+.gallery-strip{
+  display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;
+  scrollbar-width:thin;
+}
+.gallery-strip img{
+  flex:none;height:130px;width:160px;object-fit:cover;
+  border-radius:12px;border:1px solid var(--line);
+}
+@media (min-width:880px){
+  .gallery-strip img{height:160px;width:200px}
+}
+
+/* ---------- layout ---------- */
+.layout{
+  max-width:1180px;margin:0 auto;padding:clamp(16px,3vw,32px);
+  display:grid;grid-template-columns:1fr 380px;gap:22px;align-items:start;
+}
+.card{
+  background:linear-gradient(180deg,var(--bg2),rgba(31,24,48,.6));
+  border:1px solid var(--line);border-radius:var(--r);
+  padding:clamp(18px,2.4vw,26px);margin-bottom:22px;
+}
+.col-side{position:sticky;top:20px}
+
+.eyebrow{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--gold);margin:0 0 8px;
+}
+.card-title{
+  font-family:var(--font-display);font-weight:700;
+  font-size:clamp(18px,2.4vw,22px);margin:0 0 20px;letter-spacing:.01em;
+}
+
+/* ---------- controls ---------- */
+.field-row{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.field{display:flex;flex-direction:column;gap:8px;flex:1;min-width:150px}
+.field-label{
+  font-size:13px;color:var(--muted);font-weight:500;
+}
+.input{
+  background:var(--bg);border:1px solid var(--line2);border-radius:12px;
+  color:var(--text);font-family:var(--font-body);font-size:15px;
+  padding:12px 14px;width:100%;transition:.16s;
+}
+.input::placeholder{color:#67676f}
+.input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-soft)}
+input[type=date]{color-scheme:dark}
+
+.stepper{
+  display:inline-flex;align-items:center;gap:2px;
+  background:var(--bg);border:1px solid var(--line2);border-radius:12px;
+  padding:4px;width:fit-content;
+}
+.step-btn{
+  width:40px;height:40px;border:none;border-radius:9px;cursor:pointer;
+  background:transparent;color:var(--gold);font-size:22px;font-weight:700;
+  display:grid;place-items:center;transition:.14s;font-family:var(--font-display);
+}
+.step-btn:hover{background:var(--gold-soft)}
+.step-btn:active{transform:scale(.92)}
+.step-val{min-width:38px;text-align:center;font-size:18px;font-weight:700;font-family:var(--font-display)}
+
+.time-chips{display:flex;flex-wrap:wrap;gap:9px}
+.chip{
+  font-family:var(--font-mono);font-size:14px;letter-spacing:.04em;
+  padding:9px 15px;border-radius:11px;cursor:pointer;
+  background:var(--bg);border:1px solid var(--line2);color:var(--muted);transition:.15s;
+}
+.chip:hover{color:var(--text);border-color:var(--gold-deep)}
+.chip[aria-pressed=true]{
+  background:var(--gold);border-color:var(--gold);color:#111111;font-weight:700;
+}
+
+/* ---------- floor plan ---------- */
+.floor-note{
+  font-size:13px;color:var(--muted);margin:-12px 0 14px;
+}
+.legend{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:14px}
+.lg{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--muted)}
+.dot{width:13px;height:13px;border-radius:4px;display:inline-block}
+.dot-free{background:var(--bg3);border:1.5px solid var(--gold-deep)}
+.dot-sel{background:var(--gold)}
+.dot-small{background:transparent;border:1.5px dashed #3d3d44}
+.dot-taken{background:var(--taken)}
+
+.floor-wrap{
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.15), transparent),
+    #0e0e10;
+  border:1px solid var(--line);border-radius:12px;padding:10px;overflow:hidden;
+}
+#floor{width:100%;height:auto;display:block;touch-action:manipulation}
+
+.wall{fill:none;stroke:var(--line2);stroke-width:2.5}
+.room{fill:rgba(255,255,255,.02);stroke:var(--line2);stroke-width:2}
+.screen{fill:rgba(255,255,255,.22)}
+.stage{fill:rgba(255,255,255,.05);stroke:rgba(255,255,255,.28);stroke-width:1.5}
+.bar-counter{fill:rgba(255,255,255,.06);stroke:var(--gold-deep);stroke-width:1.5}
+.room-label{
+  fill:var(--muted);font-family:var(--font-mono);font-size:15px;
+  text-anchor:middle;dominant-baseline:middle;letter-spacing:.12em;
+}
+.room-label.sm{font-size:12px}
+.room-label.vert{writing-mode:vertical-rl;letter-spacing:.2em;fill:var(--gold)}
+
+/* โต๊ะ */
+.t-group{cursor:pointer}
+.t-group .surface{
+  fill:var(--bg3);stroke:var(--gold-deep);stroke-width:2;
+  transition:fill .16s, stroke .16s;
+}
+.t-group .seat{fill:#3a3a40;transition:fill .16s}
+.t-group .t-label{
+  fill:var(--text);font-family:var(--font-display);font-weight:700;
+  font-size:20px;text-anchor:middle;dominant-baseline:middle;pointer-events:none;
+}
+.t-group .t-cap{
+  fill:var(--muted);font-family:var(--font-mono);font-size:11px;
+  text-anchor:middle;dominant-baseline:middle;pointer-events:none;
+}
+.t-group:hover .surface{fill:#2a2a2e;stroke:var(--gold)}
+
+.t-group.selected .surface{fill:var(--gold);stroke:#ffffff}
+.t-group.selected .seat{fill:var(--gold-deep)}
+.t-group.selected .t-label{fill:#111111}
+.t-group.selected .t-cap{fill:#555555}
+.spotlight{opacity:0;transition:opacity .3s;pointer-events:none}
+.t-group.selected .spotlight{opacity:1}
+
+.t-group.taken{cursor:not-allowed}
+.t-group.taken .surface{fill:var(--taken);stroke:#2b2b30}
+.t-group.taken .seat{fill:#2e2e33}
+.t-group.taken .t-label,.t-group.taken .t-cap{fill:#7a7a82;opacity:.7}
+.t-group.taken:hover .surface{fill:var(--taken);stroke:#2b2b30}
+
+/* ที่นั่งอาจไม่พอ แต่ยังจองได้ — บอกใบ้ด้วยเส้นประ */
+.t-group.tight .surface{stroke-dasharray:5 4}
+.t-group.tight.selected .surface{stroke-dasharray:none}
+
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important}
+}
+
+/* ---------- summary ---------- */
+.pick{
+  display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+  padding:12px 0;border-bottom:1px solid var(--line);
+}
+.pick-label{font-size:13px;color:var(--muted)}
+.pick-value{font-size:15px;font-weight:600;text-align:right}
+.pick-value.muted{color:var(--muted);font-weight:400}
+#pick-table-val.set{color:var(--gold);font-family:var(--font-display)}
+
+.guest{display:flex;flex-direction:column;gap:10px;margin:16px 0}
+
+.confirm-btn{
+  width:100%;padding:15px;border:none;border-radius:13px;cursor:pointer;
+  font-family:var(--font-display);font-weight:700;font-size:16px;letter-spacing:.02em;
+  background:linear-gradient(180deg,var(--gold),var(--gold-deep));color:#111111;
+  transition:.16s;
+}
+.confirm-btn:hover:not(:disabled){filter:brightness(1.07);transform:translateY(-1px)}
+.confirm-btn:active:not(:disabled){transform:translateY(0)}
+.confirm-btn:disabled{
+  background:var(--bg3);color:#67676f;cursor:not-allowed;
+}
+.form-msg{font-size:13px;color:var(--rose);min-height:18px;margin:10px 0 0;text-align:center}
+.form-msg.ok{color:var(--ok)}
+
+/* ---------- mobile bar ---------- */
+.mobile-bar{display:none}
+
+/* ---------- success ---------- */
+.overlay{
+  position:fixed;inset:0;background:rgba(10,7,16,.82);backdrop-filter:blur(6px);
+  display:grid;place-items:center;padding:20px;z-index:50;
+}
+.overlay[hidden]{display:none}
+.success-card{
+  background:var(--bg2);border:1px solid var(--line2);border-radius:22px;
+  padding:36px 30px;max-width:400px;width:100%;text-align:center;
+  animation:pop .35s cubic-bezier(.2,.8,.3,1.2);
+}
+@keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.check{
+  width:66px;height:66px;border-radius:50%;margin:0 auto 18px;
+  display:grid;place-items:center;font-size:34px;color:#111111;
+  background:linear-gradient(180deg,var(--gold),var(--gold-deep));
+}
+.success-card h2{font-family:var(--font-display);margin:0 0 6px;font-size:24px}
+.success-code{
+  font-family:var(--font-mono);color:var(--gold);letter-spacing:.1em;
+  font-size:15px;margin:0 0 18px;
+}
+.success-detail{
+  text-align:left;background:var(--bg);border-radius:12px;padding:16px;
+  font-size:14px;line-height:1.9;margin-bottom:22px;
+}
+.success-detail b{color:var(--gold);font-weight:600}
+.ghost-btn{
+  width:100%;padding:13px;border-radius:12px;cursor:pointer;
+  background:transparent;border:1px solid var(--line2);color:var(--text);
+  font-family:var(--font-body);font-size:15px;transition:.15s;
+}
+.ghost-btn:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ---------- toast ---------- */
+.toast{
+  position:fixed;left:50%;bottom:110px;transform:translateX(-50%) translateY(20px);
+  background:var(--bg3);border:1px solid var(--line2);color:var(--text);
+  padding:12px 20px;border-radius:12px;font-size:14px;z-index:60;
+  opacity:0;transition:.25s;pointer-events:none;box-shadow:0 10px 30px rgba(0,0,0,.4);
+  max-width:88vw;text-align:center;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast[hidden]{display:none}
+
+/* ---------- responsive ---------- */
+@media (max-width:880px){
+  .layout{grid-template-columns:1fr}
+  .col-side{position:static}
+  body{padding-bottom:84px}
+  .summary .guest,#summary-card .confirm-btn,#summary-card .form-msg{display:block}
+  /* ปุ่มยืนยันในการ์ดยังใช้ได้ แต่เพิ่มแถบล่างเพื่อความสะดวก */
+  .mobile-bar{
+    display:flex;align-items:center;gap:12px;
+    position:fixed;left:0;right:0;bottom:0;z-index:40;
+    padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+    background:rgba(23,19,30,.94);backdrop-filter:blur(10px);
+    border-top:1px solid var(--line2);
+  }
+  .mb-info{flex:1;display:flex;flex-direction:column;line-height:1.3}
+  .mb-table{font-size:14px;color:var(--text)}
+  .mobile-bar .confirm-btn{width:auto;padding:14px 28px}
+  #summary-card .confirm-btn{display:none}
+}

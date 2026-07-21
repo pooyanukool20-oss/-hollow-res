@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HOLLOW · แผงจัดการการจอง</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .admin-wrap{max-width:1100px;margin:0 auto;padding:clamp(16px,3vw,32px)}
+  .admin-head{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between;margin-bottom:24px}
+  .res-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+  .res-card{background:linear-gradient(180deg,var(--bg2),rgba(31,24,48,.6));border:1px solid var(--line);border-radius:14px;padding:18px}
+  .res-card.cancelled{opacity:.5}
+  .res-card.completed{opacity:.7}
+  .res-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+  .res-table{font-family:var(--font-display);font-weight:700;font-size:20px;color:var(--gold)}
+  .res-time{font-family:var(--font-mono);font-size:14px;color:var(--text)}
+  .res-line{font-size:14px;color:var(--muted);margin:3px 0}
+  .res-line b{color:var(--text);font-weight:600}
+  .badge{font-family:var(--font-mono);font-size:11px;padding:3px 9px;border-radius:20px;letter-spacing:.05em}
+  .badge.confirmed{background:rgba(255,255,255,.16);color:var(--ok)}
+  .badge.completed{background:rgba(255,255,255,.10);color:var(--gold)}
+  .badge.cancelled{background:rgba(255,255,255,.05);color:var(--rose)}
+  .res-actions{display:flex;gap:8px;margin-top:12px}
+  .cancel-btn,.checkout-btn{flex:1;padding:9px;border-radius:9px;cursor:pointer;font-family:var(--font-body);font-size:13px;transition:.15s}
+  .cancel-btn{background:transparent;border:1px solid var(--line2);color:var(--muted)}
+  .cancel-btn:hover{border-color:var(--rose);color:var(--rose)}
+  .checkout-btn{background:var(--gold);border:1px solid var(--gold);color:#111}
+  .checkout-btn:hover{filter:brightness(1.08)}
+  .paid-amount{color:var(--gold);font-weight:600}
+
+  .order-box{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+  .order-item{display:flex;align-items:center;gap:8px;font-size:13px;padding:4px 0}
+  .oi-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .oi-price{color:var(--muted);font-family:var(--font-mono);font-size:11px;white-space:nowrap}
+  .oi-stepper{display:inline-flex;align-items:center;gap:4px}
+  .oi-stepper button{
+    width:22px;height:22px;border:1px solid var(--line2);background:var(--bg);
+    color:var(--gold);border-radius:6px;font-size:13px;cursor:pointer;line-height:1;
+    display:grid;place-items:center;
+  }
+  .oi-qty{min-width:16px;text-align:center;font-size:13px}
+  .oi-line-total{width:64px;text-align:right;font-family:var(--font-mono);font-size:12px;color:var(--text)}
+  .oi-remove{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:15px;padding:0 2px}
+  .oi-remove:hover{color:var(--rose)}
+  .order-add{display:flex;gap:6px;margin-top:8px}
+  .order-add input{
+    background:var(--bg);border:1px solid var(--line2);border-radius:8px;color:var(--text);
+    font-family:var(--font-body);font-size:13px;padding:6px 8px;
+  }
+  .order-add .oi-input-name{flex:1;min-width:0}
+  .order-add .oi-input-qty{width:48px}
+  .order-add .oi-input-price{width:64px}
+  .order-add-btn{
+    border:1px solid var(--line2);background:transparent;color:var(--gold);
+    border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;white-space:nowrap;
+  }
+  .order-add-btn:hover{border-color:var(--gold)}
+  .order-total{display:flex;justify-content:space-between;margin-top:8px;font-size:13px}
+  .order-total b{color:var(--gold);font-family:var(--font-mono)}
+  .empty{text-align:center;color:var(--muted);padding:60px 20px;font-size:15px}
+  .stat-row{display:flex;gap:20px;margin-top:8px}
+  .stat b{font-family:var(--font-display);font-size:24px;color:var(--gold);display:block}
+  .stat span{font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">HOLLOW</span>
+    <span class="brand-sub">admin panel</span>
+  </div>
+  <a class="admin-link" href="index.html">← หน้าจอง</a>
+</header>
+
+<div class="admin-wrap">
+  <div class="admin-head">
+    <div>
+      <p class="eyebrow">รายการจอง</p>
+      <div class="stat-row">
+        <div class="stat"><b id="stat-count">0</b><span>โต๊ะที่จอง</span></div>
+        <div class="stat"><b id="stat-guests">0</b><span>ลูกค้ารวม</span></div>
+        <div class="stat"><b id="stat-total">฿0</b><span>ยอดรวมวันนี้</span></div>
+      </div>
+    </div>
+    <label class="field" style="max-width:200px">
+      <span class="field-label">เลือกวัน</span>
+      <input type="date" id="admin-date" class="input">
+    </label>
+  </div>
+
+  <div class="res-grid" id="res-grid"></div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+<script src="admin.js"></script>
+</body>
+</html>

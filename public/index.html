@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HOLLOW · จองโต๊ะ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">HOLLOW</span>
+    <span class="brand-sub">bar &amp; cocktails</span>
+  </div>
+  <a class="admin-link" href="admin.html">แผงจัดการ →</a>
+</header>
+
+<section class="hero" style="background-image:url('images/hero-football-logo.jpg')">
+  <div class="hero-overlay">
+    <p class="hero-tag">Hollow, beef &amp; bar</p>
+    <a class="hero-contact" href="https://instagram.com/jointohollow" target="_blank" rel="noopener">ติดต่อร้าน · @jointohollow</a>
+  </div>
+</section>
+
+<section class="gallery">
+  <p class="eyebrow">บรรยากาศร้าน</p>
+  <div class="gallery-strip">
+    <img src="images/gallery-bar-counter.jpg" alt="เคาน์เตอร์บาร์ Hollow" loading="lazy">
+    <img src="images/gallery-vinyl-window.jpg" alt="มุมตกแต่งแผ่นเสียง Hollow" loading="lazy">
+    <img src="images/gallery-lounge.jpg" alt="มุมนั่งเล่นบรรยากาศ Hollow" loading="lazy">
+    <img src="images/gallery-live-music.jpg" alt="ดนตรีสดที่ Hollow" loading="lazy">
+    <img src="images/gallery-guitar.jpg" alt="บรรยากาศดนตรีสด Hollow" loading="lazy">
+    <img src="images/gallery-counter-portrait.jpg" alt="บรรยากาศบาร์ Hollow" loading="lazy">
+  </div>
+</section>
+
+<main class="layout">
+
+  <!-- ซ้าย: เลือกเวลา + แผนผัง -->
+  <section class="col-main">
+
+    <div class="card controls">
+      <p class="eyebrow">ขั้นที่ 1</p>
+      <h2 class="card-title">จองโต๊ะที่นี่</h2>
+
+      <div class="field-row">
+        <label class="field">
+          <span class="field-label">วันที่</span>
+          <input type="date" id="date-input" class="input">
+        </label>
+
+        <div class="field">
+          <span class="field-label">จำนวนคน</span>
+          <div class="stepper" id="party-stepper">
+            <button type="button" class="step-btn" data-party="-1" aria-label="ลด">–</button>
+            <span class="step-val" id="party-val">2</span>
+            <button type="button" class="step-btn" data-party="1" aria-label="เพิ่ม">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">เวลา</span>
+        <div class="time-chips" id="time-chips"></div>
+      </div>
+    </div>
+
+    <div class="card floor">
+      <p class="eyebrow">ขั้นที่ 2</p>
+      <h2 class="card-title">แตะเลือกโต๊ะบนแผนผัง</h2>
+      <p class="floor-note">* สามารถจองเกินจำนวนที่นั่งได้ หรือสอบถามเพจหากต้องการที่นั่งเพิ่มเติม</p>
+
+      <div class="legend">
+        <span class="lg"><i class="dot dot-free"></i>ว่าง</span>
+        <span class="lg"><i class="dot dot-sel"></i>ที่เลือก</span>
+        <span class="lg"><i class="dot dot-small"></i>ที่นั่งอาจไม่พอ</span>
+        <span class="lg"><i class="dot dot-taken"></i>เต็มแล้ว</span>
+      </div>
+
+      <div class="floor-wrap">
+        <svg id="floor" viewBox="0 0 1000 520" role="group" aria-label="แผนผังร้าน">
+          <defs>
+            <radialGradient id="spot" cx="50%" cy="50%" r="50%">
+              <stop offset="0%"  stop-color="var(--gold)" stop-opacity="0.55"/>
+              <stop offset="60%" stop-color="var(--gold)" stop-opacity="0.10"/>
+              <stop offset="100%" stop-color="var(--gold)" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+
+          <!-- โครงห้อง (แสดงผลอย่างเดียว กดไม่ได้) -->
+          <g class="walls">
+            <rect class="wall" x="24" y="24" width="560" height="472" rx="6"/>
+            <rect class="screen" x="70" y="62" width="330" height="12" rx="4"/>
+            <text class="room-label sm" x="235" y="92">จอ</text>
+
+            <rect class="room" x="596" y="24" width="96" height="250" rx="4"/>
+            <rect class="room" x="772" y="16" width="204" height="80" rx="4"/>
+            <text class="room-label" x="874" y="62">ห้องน้ำ</text>
+            <rect class="room" x="772" y="112" width="204" height="162" rx="4"/>
+            <rect class="room" x="772" y="316" width="204" height="180" rx="4"/>
+
+            <rect class="stage" x="250" y="442" width="170" height="50" rx="6"/>
+            <text class="room-label sm" x="335" y="472">MUSIC ZONE</text>
+
+            <rect class="bar-counter" x="648" y="300" width="40" height="196" rx="6"/>
+            <text class="room-label vert" x="668" y="398">BAR</text>
+          </g>
+
+          <!-- โต๊ะ (สร้างด้วย JavaScript) -->
+          <g id="tables-layer"></g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ขวา: สรุป + ยืนยัน -->
+  <aside class="col-side">
+    <div class="card summary" id="summary-card">
+      <p class="eyebrow">สรุปการจอง</p>
+
+      <div class="pick" id="pick-table">
+        <span class="pick-label">โต๊ะ</span>
+        <span class="pick-value muted" id="pick-table-val">ยังไม่ได้เลือก</span>
+      </div>
+      <div class="pick">
+        <span class="pick-label">วัน · เวลา</span>
+        <span class="pick-value" id="pick-when">—</span>
+      </div>
+      <div class="pick">
+        <span class="pick-label">จำนวน</span>
+        <span class="pick-value" id="pick-party">2 คน</span>
+      </div>
+
+      <div class="guest">
+        <p class="eyebrow">ขั้นที่ 3 · ข้อมูลผู้จอง</p>
+        <input type="text" id="name-input" class="input" placeholder="ชื่อผู้จอง" autocomplete="name" required>
+        <input type="tel" id="phone-input" class="input" placeholder="เบอร์โทร *" autocomplete="tel" required>
+        <input type="text" id="ig-input" class="input" placeholder="ไอดีไอจี (Instagram) *" autocomplete="off" required>
+        <input type="text" id="note-input" class="input" placeholder="โน้ตถึงร้าน (ไม่บังคับ)">
+      </div>
+
+      <button type="button" class="confirm-btn" id="confirm-btn" disabled>เลือกโต๊ะก่อน</button>
+      <p class="form-msg" id="form-msg"></p>
+    </div>
+  </aside>
+</main>
+
+<!-- แถบล่างบนมือถือ -->
+<div class="mobile-bar" id="mobile-bar">
+  <div class="mb-info">
+    <span class="mb-table" id="mb-table">ยังไม่ได้เลือกโต๊ะ</span>
+  </div>
+  <button type="button" class="confirm-btn" id="confirm-btn-mobile" disabled>ยืนยัน</button>
+</div>
+
+<!-- หน้าจอยืนยันสำเร็จ -->
+<div class="overlay" id="success-overlay" hidden>
+  <div class="success-card">
+    <div class="check">✓</div>
+    <h2>จองสำเร็จ</h2>
+    <p class="success-code" id="success-code"></p>
+    <div class="success-detail" id="success-detail"></div>
+    <button type="button" class="ghost-btn" id="again-btn">จองอีกครั้ง</button>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="app.js"></script>
+</body>
+</html>

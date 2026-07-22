@@ -142,18 +142,21 @@ def get_table_name(table_id):
         conn.close()
 
 
-def taken_table_ids(res_date=None, res_time=None):
+def taken_table_ids(res_date, res_time=None):
     """
-    คืนรายการ id ของโต๊ะที่ยังไม่ว่าง — โต๊ะที่มีการจองค้างอยู่ (status='confirmed')
-    จะไม่ว่างจนกว่าจะเช็คบิล/ยกเลิก หรือเลยตี 1 ของคืนที่จองไปแล้ว (รีเซ็ตอัตโนมัติ)
-    ไม่ขึ้นกับว่าลูกค้ากำลังจะจองวัน/เวลาไหน (ป้องกันโต๊ะเดิมโดนจองซ้ำทั้งที่ยังไม่ว่างจริง)
+    คืนรายการ id ของโต๊ะที่ไม่ว่างใน "วันนั้น" (ทุกช่วงเวลาของวันเดียวกัน) —
+    โต๊ะที่มีการจองค้างอยู่ (status='confirmed') ในวันนี้จะจองซ้ำไม่ได้จนกว่าจะเช็คบิล/ยกเลิก
+    หรือเลยตี 1 ของคืนนั้น (รีเซ็ตอัตโนมัติ) แต่ไม่กระทบวันอื่นเลย
     """
+    if _is_past_reset(res_date):
+        return []
     conn = get_conn()
     try:
         rows = conn.execute(
-            "SELECT DISTINCT table_id, res_date FROM reservations WHERE status = 'confirmed'"
+            "SELECT DISTINCT table_id FROM reservations WHERE res_date = ? AND status = 'confirmed'",
+            (res_date,),
         ).fetchall()
-        return list({r["table_id"] for r in rows if not _is_past_reset(r["res_date"])})
+        return [r["table_id"] for r in rows]
     finally:
         conn.close()
 
@@ -249,14 +252,15 @@ def create_reservation(data):
             raise BookingError("ไม่พบโต๊ะที่เลือก")
         # หมายเหตุ: อนุญาตให้จองจำนวนคนมากกว่าจำนวนเก้าอี้ได้ (ไม่จำกัดตามความจุ)
 
-        # โต๊ะนี้ต้องไม่มีการจองค้างอยู่เลย (ไม่ว่าจะวัน/เวลาไหน) ก่อนจะรับจองใหม่ได้
-        open_res = conn.execute(
-            "SELECT res_date FROM reservations WHERE table_id = ? AND status = 'confirmed'",
-            (table_id,),
-        ).fetchall()
-        if any(not _is_past_reset(r["res_date"]) for r in open_res):
+        # โต๊ะนี้ต้องไม่มีการจองค้างอยู่ใน "วันเดียวกัน" (ไม่ว่าช่วงเวลาไหน) ก่อนจะรับจองใหม่ได้
+        # ไม่กระทบวันอื่น — จองวันอื่นได้ปกติแม้โต๊ะนี้จะไม่ว่างวันนี้
+        clash = conn.execute(
+            "SELECT id FROM reservations WHERE table_id = ? AND res_date = ? AND status = 'confirmed'",
+            (table_id, res_date),
+        ).fetchone()
+        if clash and not _is_past_reset(res_date):
             raise BookingError(
-                f"{table['name']} ยังไม่ว่าง (ลูกค้าก่อนหน้ายังไม่เช็คบิล) กรุณาเลือกโต๊ะอื่น"
+                f"{table['name']} ยังไม่ว่างในวันนี้ (ลูกค้าก่อนหน้ายังไม่เช็คบิล) กรุณาเลือกโต๊ะหรือวันอื่น"
             )
 
         cur = conn.execute(

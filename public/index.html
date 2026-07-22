@@ -82,7 +82,7 @@
       </div>
 
       <div class="floor-wrap">
-        <svg id="floor" viewBox="0 0 1000 520" role="group" aria-label="แผนผังร้าน">
+        <svg id="floor" viewBox="0 0 1000 580" role="group" aria-label="แผนผังร้าน">
           <defs>
             <radialGradient id="spot" cx="50%" cy="50%" r="50%">
               <stop offset="0%"  stop-color="var(--gold)" stop-opacity="0.55"/>
@@ -104,20 +104,18 @@
             </radialGradient>
           </defs>
 
-          <!-- แสงอบอุ่นแวดล้อม + ของตกแต่งผนัง (แสดงผลอย่างเดียว) -->
+          <!-- แสงอบอุ่นแวดล้อม (แสดงผลอย่างเดียว) -->
           <g class="ambient-lights" aria-hidden="true">
-            <ellipse class="zone-glow stage-glow" cx="335" cy="460" rx="150" ry="85" fill="url(#lamp)"/>
-            <ellipse class="zone-glow bar-glow" cx="668" cy="398" rx="95" ry="170" fill="url(#lamp)"/>
+            <ellipse class="zone-glow stage-glow" cx="335" cy="520" rx="150" ry="85" fill="url(#lamp)"/>
+            <ellipse class="zone-glow bar-glow" cx="668" cy="428" rx="95" ry="200" fill="url(#lamp)"/>
             <ellipse class="beam-glow" cx="235" cy="68" rx="220" ry="120" fill="url(#beam)"/>
             <circle class="wall-lamp" cx="500" cy="26" r="9" fill="#ffd9ab"/>
             <ellipse class="wall-lamp-glow" cx="500" cy="26" rx="55" ry="42" fill="url(#lamp)"/>
-            <rect class="wall-frame" x="452" y="40" width="42" height="56" rx="2"/>
-            <rect class="wall-frame" x="506" y="46" width="34" height="48" rx="2"/>
           </g>
 
           <!-- โครงห้อง (แสดงผลอย่างเดียว กดไม่ได้) -->
           <g class="walls">
-            <rect class="wall" x="24" y="24" width="560" height="472" rx="6"/>
+            <rect class="wall" x="24" y="24" width="560" height="532" rx="6"/>
             <rect class="screen" x="70" y="62" width="330" height="12" rx="4"/>
             <text class="room-label sm" x="235" y="92">จอ</text>
 
@@ -125,13 +123,13 @@
             <rect class="room" x="772" y="16" width="204" height="80" rx="4"/>
             <text class="room-label" x="874" y="62">ห้องน้ำ</text>
             <rect class="room" x="772" y="112" width="204" height="162" rx="4"/>
-            <rect class="room" x="772" y="316" width="204" height="180" rx="4"/>
+            <rect class="room" x="772" y="316" width="204" height="240" rx="4"/>
 
-            <rect class="stage" x="250" y="442" width="170" height="50" rx="6"/>
-            <text class="room-label sm" x="335" y="472">MUSIC ZONE</text>
+            <rect class="stage" x="250" y="502" width="170" height="50" rx="6"/>
+            <text class="room-label sm" x="335" y="532">MUSIC ZONE</text>
 
-            <rect class="bar-counter" x="648" y="300" width="40" height="196" rx="6"/>
-            <text class="room-label vert" x="668" y="398">BAR</text>
+            <rect class="bar-counter" x="648" y="300" width="40" height="256" rx="6"/>
+            <text class="room-label vert" x="668" y="428">BAR</text>
           </g>
 
           <!-- โต๊ะ (สร้างด้วย JavaScript) -->

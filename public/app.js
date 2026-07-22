@@ -4,17 +4,17 @@
 // แต่ละโต๊ะ: code ตรงกับฐานข้อมูล, surface = สี่เหลี่ยมพื้นโต๊ะ
 const LAYOUT = {
   t5: { x:70,  y:140, w:64,  h:46 },
-  t4: { x:70,  y:224, w:64,  h:46 },
-  t2: { x:62,  y:318, w:50,  h:120 },
-  t1: { x:58,  y:452, w:50,  h:40 },
-  t3: { x:248, y:314, w:110, h:96 },
-  t7: { x:418, y:168, w:52,  h:150 },
-  t6: { x:476, y:104, w:60,  h:48 },
-  bar1: { cx:624, cy:328, stool:true },
-  bar2: { cx:624, cy:368, stool:true },
-  bar3: { cx:624, cy:408, stool:true },
-  bar4: { cx:624, cy:448, stool:true },
-  bar5: { cx:624, cy:488, stool:true },
+  t4: { x:70,  y:232, w:64,  h:46 },
+  t2: { x:62,  y:330, w:50,  h:130 },
+  t1: { x:58,  y:480, w:50,  h:44 },
+  t3: { x:248, y:330, w:110, h:100 },
+  t6: { x:470, y:90,  w:60,  h:48 },
+  t7: { x:418, y:230, w:52,  h:160 },
+  bar1: { cx:624, cy:340, stool:true },
+  bar2: { cx:624, cy:384, stool:true },
+  bar3: { cx:624, cy:428, stool:true },
+  bar4: { cx:624, cy:472, stool:true },
+  bar5: { cx:624, cy:516, stool:true },
 };
 
 const TIME_SLOTS = ['18:00','19:00','20:00','21:00','22:00','23:00','00:00','01:00'];

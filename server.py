@@ -210,6 +210,16 @@ class Handler(BaseHTTPRequestHandler):
             ok = db.cancel_reservation(int(m.group(1)))
             return self._send_json({"ok": ok})
 
+        m = re.match(r"^/api/reservations/(\d+)/arrived$", path)
+        if m:
+            if not self._is_authorized():
+                return self._require_auth()
+            try:
+                arrived = db.toggle_arrived(int(m.group(1)))
+                return self._send_json({"ok": True, "arrived": arrived})
+            except db.BookingError as e:
+                return self._send_json({"ok": False, "error": str(e)}, 400)
+
         m = re.match(r"^/api/reservations/(\d+)/checkout$", path)
         if m:
             if not self._is_authorized():

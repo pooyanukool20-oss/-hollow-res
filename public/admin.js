@@ -112,6 +112,10 @@ function render(list, walkinSales){
         <span class="res-table">${r.table_name}</span>
         <span class="res-time">${r.res_time} น.</span>
       </div>
+      ${r.status==='confirmed' ? `
+        <button type="button" class="arrived-toggle ${r.arrived ? 'arrived' : ''}" data-id="${r.id}">
+          <span class="arrived-dot"></span>${r.arrived ? 'ลูกค้ามาแล้ว' : 'ยังไม่มา'}
+        </button>` : ''}
       <div class="res-line"><b>${r.customer_name}</b> · ${r.party_size} คน</div>
       <div class="res-line">${r.phone}</div>
       <div class="res-line">IG: ${r.instagram || '—'}</div>
@@ -127,6 +131,15 @@ function render(list, walkinSales){
           <button class="cancel-btn" data-id="${r.id}">ยกเลิก</button>
         </div>` : ''}
     </div>`).join('');
+
+  grid.querySelectorAll('.arrived-toggle').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      try{
+        await fetch(`/api/reservations/${btn.dataset.id}/arrived`, { method:'POST' });
+        load();
+      }catch(e){ toast('อัปเดตไม่สำเร็จ'); }
+    });
+  });
 
   grid.querySelectorAll('.cancel-btn').forEach(btn=>{
     btn.addEventListener('click', async ()=>{

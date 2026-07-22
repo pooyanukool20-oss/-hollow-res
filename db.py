@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS reservations (
     instagram     TEXT NOT NULL,
     note          TEXT,
     status        TEXT NOT NULL DEFAULT 'confirmed',  -- confirmed / completed / cancelled
+    arrived       INTEGER NOT NULL DEFAULT 0,  -- ลูกค้ามาถึงร้านแล้วหรือยัง (0/1)
     paid_amount   INTEGER,           -- ยอดที่ลูกค้าจ่าย (ใส่ตอนเช็คบิล)
     checked_out_at TEXT,
     created_at    TEXT NOT NULL,
@@ -115,6 +116,8 @@ def init_db():
             conn.execute("ALTER TABLE reservations ADD COLUMN paid_amount INTEGER")
         if "checked_out_at" not in cols:
             conn.execute("ALTER TABLE reservations ADD COLUMN checked_out_at TEXT")
+        if "arrived" not in cols:
+            conn.execute("ALTER TABLE reservations ADD COLUMN arrived INTEGER NOT NULL DEFAULT 0")
         conn.commit()
     finally:
         conn.close()
@@ -293,6 +296,23 @@ def cancel_reservation(res_id):
         )
         conn.commit()
         return cur.rowcount > 0
+    finally:
+        conn.close()
+
+
+def toggle_arrived(res_id):
+    """สลับสถานะว่าลูกค้ามาถึงร้านแล้วหรือยัง — คืนค่าสถานะใหม่หลังสลับ"""
+    conn = get_conn()
+    try:
+        row = conn.execute(
+            "SELECT arrived FROM reservations WHERE id = ? AND status = 'confirmed'", (res_id,)
+        ).fetchone()
+        if not row:
+            raise BookingError("ไม่พบการจองนี้ หรือปิดบิลไปแล้ว")
+        new_value = 0 if row["arrived"] else 1
+        conn.execute("UPDATE reservations SET arrived = ? WHERE id = ?", (new_value, res_id))
+        conn.commit()
+        return bool(new_value)
     finally:
         conn.close()
 

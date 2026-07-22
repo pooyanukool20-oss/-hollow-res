@@ -16,6 +16,16 @@
   .res-card.cancelled{opacity:.5}
   .res-card.completed{opacity:.7}
   .res-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+  .arrived-toggle{
+    display:inline-flex;align-items:center;gap:6px;margin-bottom:10px;
+    border:1px solid var(--line2);background:transparent;border-radius:20px;
+    padding:4px 10px;font-family:var(--font-body);font-size:12px;color:var(--muted);
+    cursor:pointer;transition:.15s;
+  }
+  .arrived-toggle:hover{border-color:var(--text)}
+  .arrived-dot{width:9px;height:9px;border-radius:50%;background:#e0525a;display:inline-block;flex:none}
+  .arrived-toggle.arrived{color:var(--text);border-color:#3ecf6a}
+  .arrived-toggle.arrived .arrived-dot{background:#3ecf6a}
   .res-table{font-family:var(--font-display);font-weight:700;font-size:20px;color:var(--gold)}
   .res-time{font-family:var(--font-mono);font-size:14px;color:var(--text)}
   .res-line{font-size:14px;color:var(--muted);margin:3px 0}

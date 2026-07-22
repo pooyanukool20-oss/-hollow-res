@@ -9,11 +9,14 @@
   --gold:#ffffff;
   --gold-deep:#c9c9d0;
   --gold-soft:rgba(255,255,255,.10);
+  --accent:#ff5a36;
+  --accent-deep:#c73f20;
+  --accent-soft:rgba(255,90,54,.14);
   --rose:#e0e0e6;
   --taken:#37373d;
   --ok:#ffffff;
   --font-body:'Noto Sans Thai',system-ui,-apple-system,sans-serif;
-  --font-display:'Space Grotesk','Noto Sans Thai',sans-serif;
+  --font-display:'Fraunces','Noto Sans Thai',serif;
   --font-mono:'Space Mono',ui-monospace,monospace;
   --r:16px;
 }
@@ -30,6 +33,13 @@ body{
   min-height:100vh;
   -webkit-font-smoothing:antialiased;
   padding-bottom:96px;
+  position:relative;
+}
+/* เกรนฟิล์มบางๆ ทั้งหน้า ให้ความรู้สึกซีนพิมพ์ ไม่ใช่หน้าจอเรียบๆ */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:999;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:.035;mix-blend-mode:overlay;
 }
 
 /* ---------- topbar ---------- */
@@ -40,13 +50,13 @@ body{
 }
 .brand{display:flex;flex-direction:column;line-height:1}
 .brand-mark{
-  font-family:var(--font-display);font-weight:700;
-  font-size:clamp(20px,3vw,26px);letter-spacing:.32em;
-  color:var(--text);text-indent:.32em;
+  font-family:var(--font-display);font-weight:600;font-style:italic;
+  font-size:clamp(28px,5vw,42px);letter-spacing:-.01em;
+  color:var(--text);
 }
 .brand-sub{
   font-family:var(--font-mono);font-size:11px;letter-spacing:.28em;
-  text-transform:uppercase;color:var(--gold);margin-top:6px;text-indent:.05em;
+  text-transform:uppercase;color:var(--accent);margin-top:5px;text-indent:.05em;
 }
 .admin-link{
   font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;
@@ -59,6 +69,7 @@ body{
 .hero{
   position:relative;height:clamp(160px,30vw,300px);
   background-size:cover;background-position:center;
+  background-color:#1a1712;background-blend-mode:luminosity;
   overflow:hidden;
 }
 .hero::after{
@@ -71,8 +82,9 @@ body{
   padding:18px clamp(16px,4vw,40px);
 }
 .hero-tag{
-  font-family:var(--font-mono);font-size:12px;letter-spacing:.28em;
-  text-transform:uppercase;color:var(--gold);margin:0;
+  font-family:var(--font-display);font-weight:600;font-style:italic;
+  font-size:clamp(16px,2.4vw,22px);
+  color:var(--text);margin:0;
 }
 .hero-contact{
   font-family:var(--font-mono);font-size:12px;letter-spacing:.04em;
@@ -93,7 +105,10 @@ body{
 .gallery-strip img{
   flex:none;height:130px;width:160px;object-fit:cover;
   border-radius:12px;border:1px solid var(--line);
+  filter:grayscale(.3) contrast(1.08) brightness(.96);
+  transition:filter .2s;
 }
+.gallery-strip img:hover{filter:grayscale(0) contrast(1.05) brightness(1)}
 @media (min-width:880px){
   .gallery-strip img{height:160px;width:200px}
 }
@@ -107,16 +122,28 @@ body{
   background:linear-gradient(180deg,var(--bg2),rgba(31,24,48,.6));
   border:1px solid var(--line);border-radius:var(--r);
   padding:clamp(18px,2.4vw,26px);margin-bottom:22px;
+  position:relative;overflow:hidden;
 }
 .col-side{position:sticky;top:20px}
 
-.eyebrow{
-  font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;
-  text-transform:uppercase;color:var(--gold);margin:0 0 8px;
+/* ดวงตาลอยๆ แฝงอยู่หลังการ์ดแผนผัง — เซอร์เรียลนิดๆ เหมือนมีใครมองอยู่ */
+.card.floor::before{
+  content:'';position:absolute;right:-60px;bottom:-70px;width:320px;height:320px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Cg fill='none' stroke='white' stroke-width='1.5'%3E%3Cpath d='M20 150 Q150 40 280 150 Q150 260 20 150 Z'/%3E%3Ccircle cx='150' cy='150' r='52'/%3E%3Ccircle cx='150' cy='150' r='10' fill='white'/%3E%3Cpath d='M55 108 L32 90 M245 108 L268 90'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:contain;background-repeat:no-repeat;
+  opacity:.05;pointer-events:none;z-index:0;
 }
+.card.floor > *{position:relative;z-index:1}
+
+.eyebrow{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--accent);margin:0 0 10px;
+  display:flex;align-items:center;gap:10px;
+}
+.eyebrow::after{content:'';flex:1;height:1px;background:var(--line2)}
 .card-title{
-  font-family:var(--font-display);font-weight:700;
-  font-size:clamp(18px,2.4vw,22px);margin:0 0 20px;letter-spacing:.01em;
+  font-family:var(--font-display);font-weight:600;font-style:italic;
+  font-size:clamp(22px,3.2vw,30px);margin:0 0 20px;letter-spacing:-.01em;line-height:1.2;
 }
 
 /* ---------- controls ---------- */
@@ -156,7 +183,7 @@ input[type=date]{color-scheme:dark}
 }
 .chip:hover{color:var(--text);border-color:var(--gold-deep)}
 .chip[aria-pressed=true]{
-  background:var(--gold);border-color:var(--gold);color:#111111;font-weight:700;
+  background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700;
 }
 
 /* ---------- floor plan ---------- */
@@ -179,11 +206,11 @@ input[type=date]{color-scheme:dark}
 }
 #floor{width:100%;height:auto;display:block;touch-action:manipulation}
 
-.wall{fill:none;stroke:var(--line2);stroke-width:2.5}
-.room{fill:rgba(255,255,255,.02);stroke:var(--line2);stroke-width:2}
-.screen{fill:rgba(255,255,255,.22)}
-.stage{fill:rgba(255,255,255,.05);stroke:rgba(255,255,255,.28);stroke-width:1.5}
-.bar-counter{fill:rgba(255,255,255,.06);stroke:var(--gold-deep);stroke-width:1.5}
+.wall{fill:none;stroke:var(--line2);stroke-width:2.5;filter:url(#rough)}
+.room{fill:rgba(255,255,255,.02);stroke:var(--line2);stroke-width:2;filter:url(#rough)}
+.screen{fill:rgba(255,255,255,.22);filter:url(#rough)}
+.stage{fill:rgba(255,255,255,.05);stroke:rgba(255,255,255,.28);stroke-width:1.5;filter:url(#rough)}
+.bar-counter{fill:rgba(255,255,255,.06);stroke:var(--gold-deep);stroke-width:1.5;filter:url(#rough)}
 .room-label{
   fill:var(--muted);font-family:var(--font-mono);font-size:15px;
   text-anchor:middle;dominant-baseline:middle;letter-spacing:.12em;
@@ -196,8 +223,9 @@ input[type=date]{color-scheme:dark}
 .t-group .surface{
   fill:var(--bg3);stroke:var(--gold-deep);stroke-width:2;
   transition:fill .16s, stroke .16s;
+  filter:url(#rough);
 }
-.t-group .seat{fill:#3a3a40;transition:fill .16s}
+.t-group .seat{fill:#3a3a40;transition:fill .16s;filter:url(#rough)}
 .t-group .t-label{
   fill:var(--text);font-family:var(--font-display);font-weight:700;
   font-size:20px;text-anchor:middle;dominant-baseline:middle;pointer-events:none;
@@ -243,8 +271,8 @@ input[type=date]{color-scheme:dark}
 
 .confirm-btn{
   width:100%;padding:15px;border:none;border-radius:13px;cursor:pointer;
-  font-family:var(--font-display);font-weight:700;font-size:16px;letter-spacing:.02em;
-  background:linear-gradient(180deg,var(--gold),var(--gold-deep));color:#111111;
+  font-family:var(--font-display);font-weight:600;font-style:italic;font-size:17px;letter-spacing:.01em;
+  background:linear-gradient(135deg,var(--accent),var(--accent-deep));color:#fff;
   transition:.16s;
 }
 .confirm-btn:hover:not(:disabled){filter:brightness(1.07);transform:translateY(-1px)}
@@ -272,12 +300,12 @@ input[type=date]{color-scheme:dark}
 @keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
 .check{
   width:66px;height:66px;border-radius:50%;margin:0 auto 18px;
-  display:grid;place-items:center;font-size:34px;color:#111111;
-  background:linear-gradient(180deg,var(--gold),var(--gold-deep));
+  display:grid;place-items:center;font-size:34px;color:#fff;
+  background:linear-gradient(135deg,var(--accent),var(--accent-deep));
 }
-.success-card h2{font-family:var(--font-display);margin:0 0 6px;font-size:24px}
+.success-card h2{font-family:var(--font-display);font-weight:600;font-style:italic;margin:0 0 6px;font-size:26px}
 .success-code{
-  font-family:var(--font-mono);color:var(--gold);letter-spacing:.1em;
+  font-family:var(--font-mono);color:var(--accent);letter-spacing:.1em;
   font-size:15px;margin:0 0 18px;
 }
 .success-detail{

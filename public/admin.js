@@ -13,12 +13,36 @@ async function load(){
   const date = $('admin-date').value;
   const grid = $('res-grid');
   try{
-    const r = await fetch('/api/reservations' + (date ? `?date=${date}` : ''));
-    const { reservations } = await r.json();
-    render(reservations);
+    const [resR, wiR] = await Promise.all([
+      fetch('/api/reservations' + (date ? `?date=${date}` : '')),
+      fetch('/api/walkin-sales' + (date ? `?date=${date}` : '')),
+    ]);
+    const { reservations } = await resR.json();
+    const { sales } = await wiR.json();
+    renderWalkin(sales);
+    render(reservations, sales);
   }catch(e){
     grid.innerHTML = `<div class="empty">โหลดข้อมูลไม่สำเร็จ</div>`;
   }
+}
+
+function renderWalkin(sales){
+  const list = $('walkin-list');
+  list.innerHTML = sales.map(s => `
+    <div class="walkin-item" data-id="${s.id}">
+      <span class="wi-note">${s.note || 'ยอดขายไม่มีโต๊ะ'}</span>
+      <span class="wi-amount">${baht(s.paid_amount)}</span>
+      <button type="button" class="wi-remove" data-id="${s.id}">×</button>
+    </div>`).join('');
+
+  list.querySelectorAll('.wi-remove').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      try{
+        await fetch(`/api/walkin-sales/${btn.dataset.id}/delete`, { method:'POST' });
+        load();
+      }catch(e){ toast('ลบไม่สำเร็จ'); }
+    });
+  });
 }
 
 const STATUS_LABEL = { confirmed:'ยืนยันแล้ว', completed:'เช็คบิลแล้ว', cancelled:'ยกเลิก' };
@@ -65,14 +89,17 @@ function orderBox(r){
     </div>`;
 }
 
-function render(list){
+function render(list, walkinSales){
   const grid = $('res-grid');
   const active = list.filter(r => r.status === 'confirmed');
   const completed = list.filter(r => r.status === 'completed');
 
+  const resTotal = completed.reduce((a,r)=>a+(r.paid_amount||0),0);
+  const walkinTotal = (walkinSales||[]).reduce((a,s)=>a+(s.paid_amount||0),0);
+
   $('stat-count').textContent = active.length;
   $('stat-guests').textContent = active.reduce((a,r)=>a+r.party_size,0);
-  $('stat-total').textContent = baht(completed.reduce((a,r)=>a+(r.paid_amount||0),0));
+  $('stat-total').textContent = baht(resTotal + walkinTotal);
 
   if(!list.length){
     grid.innerHTML = `<div class="empty">ยังไม่มีการจองในวันนี้</div>`;
@@ -183,6 +210,28 @@ function init(){
   const iso = new Date(d - d.getTimezoneOffset()*60000).toISOString().slice(0,10);
   $('admin-date').value = iso;
   $('admin-date').addEventListener('change', load);
+
+  $('wi-add-btn').addEventListener('click', async ()=>{
+    const note = $('wi-input-note').value.trim();
+    const amount = Number($('wi-input-amount').value);
+    if(!Number.isFinite(amount) || amount < 0){
+      toast('กรุณาใส่ยอดเงินให้ถูกต้อง');
+      return;
+    }
+    try{
+      const r = await fetch('/api/walkin-sales', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ sale_date: $('admin-date').value, note, paid_amount: amount }),
+      });
+      const data = await r.json().catch(()=>({}));
+      if(!r.ok || !data.ok){ toast(data.error || 'บันทึกไม่สำเร็จ'); return; }
+      $('wi-input-note').value = '';
+      $('wi-input-amount').value = '';
+      toast('บันทึกยอดขายแล้ว');
+      load();
+    }catch(e){ toast('บันทึกไม่สำเร็จ'); }
+  });
+
   load();
 }
 document.addEventListener('DOMContentLoaded', init);

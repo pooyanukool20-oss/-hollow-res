@@ -160,6 +160,12 @@ class Handler(BaseHTTPRequestHandler):
             date = (qs.get("date", [None])[0])
             return self._send_json({"reservations": db.list_reservations(date)})
 
+        if path == "/api/walkin-sales":
+            if not self._is_authorized():
+                return self._require_auth()
+            date = (qs.get("date", [None])[0])
+            return self._send_json({"sales": db.list_walkin_sales(date)})
+
         if path == "/favicon.ico":
             self.send_response(204)
             self.end_headers()
@@ -248,6 +254,25 @@ class Handler(BaseHTTPRequestHandler):
                 return self._send_json({"ok": True})
             except db.BookingError as e:
                 return self._send_json({"ok": False, "error": str(e)}, 400)
+
+        if path == "/api/walkin-sales":
+            if not self._is_authorized():
+                return self._require_auth()
+            data = self._read_json()
+            try:
+                sale_id = db.add_walkin_sale(
+                    data.get("sale_date"), data.get("note"), data.get("paid_amount")
+                )
+                return self._send_json({"ok": True, "id": sale_id}, 201)
+            except db.BookingError as e:
+                return self._send_json({"ok": False, "error": str(e)}, 400)
+
+        m = re.match(r"^/api/walkin-sales/(\d+)/delete$", path)
+        if m:
+            if not self._is_authorized():
+                return self._require_auth()
+            ok = db.delete_walkin_sale(int(m.group(1)))
+            return self._send_json({"ok": ok})
 
         self.send_error(404)
 

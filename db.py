@@ -64,6 +64,15 @@ CREATE TABLE IF NOT EXISTS order_items (
     FOREIGN KEY (reservation_id) REFERENCES reservations(id) ON DELETE CASCADE
 );
 
+-- ยอดขายที่ไม่ผูกกับโต๊ะ/การจอง เช่น ลูกค้ายืนซื้อหน้าบาร์หรือซื้อกลับ
+CREATE TABLE IF NOT EXISTS walkin_sales (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    sale_date   TEXT NOT NULL,     -- 'YYYY-MM-DD'
+    note        TEXT,
+    paid_amount INTEGER NOT NULL,
+    created_at  TEXT NOT NULL
+);
+
 -- กันจองซ้ำโต๊ะเดิม วัน+เวลาเดิม (เฉพาะที่ยัง confirmed)
 CREATE INDEX IF NOT EXISTS idx_res_slot
     ON reservations (table_id, res_date, res_time, status);
@@ -176,6 +185,20 @@ def list_reservations(res_date=None):
             d["order_total"] = sum(i["qty"] * i["unit_price"] for i in d["items"])
             result.append(d)
         return result
+    finally:
+        conn.close()
+
+
+def list_walkin_sales(sale_date=None):
+    conn = get_conn()
+    try:
+        if sale_date:
+            rows = conn.execute(
+                "SELECT * FROM walkin_sales WHERE sale_date = ? ORDER BY id", (sale_date,)
+            ).fetchall()
+        else:
+            rows = conn.execute("SELECT * FROM walkin_sales ORDER BY id").fetchall()
+        return [dict(r) for r in rows]
     finally:
         conn.close()
 
@@ -366,6 +389,41 @@ def remove_order_item(item_id):
             raise BookingError("ไม่พบรายการนี้ หรือปิดบิลไปแล้ว")
         conn.execute("DELETE FROM order_items WHERE id = ?", (item_id,))
         conn.commit()
+    finally:
+        conn.close()
+
+
+def add_walkin_sale(sale_date, note, paid_amount):
+    """บันทึกยอดขายที่ไม่มีโต๊ะ (ลูกค้าจ่ายแยกหน้าบาร์/ซื้อกลับ)"""
+    sale_date = (sale_date or "").strip()
+    if not sale_date:
+        raise BookingError("กรุณาระบุวันที่")
+    try:
+        amount = int(paid_amount)
+    except (TypeError, ValueError):
+        raise BookingError("ยอดเงินต้องเป็นตัวเลข")
+    if amount < 0:
+        raise BookingError("ยอดเงินต้องไม่ติดลบ")
+    note = (note or "").strip()
+
+    conn = get_conn()
+    try:
+        cur = conn.execute(
+            "INSERT INTO walkin_sales (sale_date, note, paid_amount, created_at) VALUES (?,?,?,?)",
+            (sale_date, note, amount, datetime.now().isoformat(timespec="seconds")),
+        )
+        conn.commit()
+        return cur.lastrowid
+    finally:
+        conn.close()
+
+
+def delete_walkin_sale(sale_id):
+    conn = get_conn()
+    try:
+        cur = conn.execute("DELETE FROM walkin_sales WHERE id = ?", (sale_id,))
+        conn.commit()
+        return cur.rowcount > 0
     finally:
         conn.close()
 

@@ -93,7 +93,27 @@
               <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="7" result="noise"/>
               <feDisplacementMap in="SourceGraphic" in2="noise" scale="3"/>
             </filter>
+            <radialGradient id="lamp" cx="50%" cy="50%" r="50%">
+              <stop offset="0%"  stop-color="#ffb066" stop-opacity="0.95"/>
+              <stop offset="45%" stop-color="#ff8a3c" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="#ff8a3c" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="beam" cx="50%" cy="0%" r="80%">
+              <stop offset="0%"  stop-color="#ffcf9e" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="#ffcf9e" stop-opacity="0"/>
+            </radialGradient>
           </defs>
+
+          <!-- แสงอบอุ่นแวดล้อม + ของตกแต่งผนัง (แสดงผลอย่างเดียว) -->
+          <g class="ambient-lights" aria-hidden="true">
+            <ellipse class="zone-glow stage-glow" cx="335" cy="460" rx="150" ry="85" fill="url(#lamp)"/>
+            <ellipse class="zone-glow bar-glow" cx="668" cy="398" rx="95" ry="170" fill="url(#lamp)"/>
+            <ellipse class="beam-glow" cx="235" cy="68" rx="220" ry="120" fill="url(#beam)"/>
+            <circle class="wall-lamp" cx="500" cy="26" r="9" fill="#ffd9ab"/>
+            <ellipse class="wall-lamp-glow" cx="500" cy="26" rx="55" ry="42" fill="url(#lamp)"/>
+            <rect class="wall-frame" x="452" y="40" width="42" height="56" rx="2"/>
+            <rect class="wall-frame" x="506" y="46" width="34" height="48" rx="2"/>
+          </g>
 
           <!-- โครงห้อง (แสดงผลอย่างเดียว กดไม่ได้) -->
           <g class="walls">

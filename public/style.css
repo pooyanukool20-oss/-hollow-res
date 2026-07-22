@@ -200,23 +200,43 @@ input[type=date]{color-scheme:dark}
 
 .floor-wrap{
   background:
-    linear-gradient(180deg, rgba(0,0,0,.15), transparent),
-    #0e0e10;
-  border:1px solid var(--line);border-radius:12px;padding:10px;overflow:hidden;
+    radial-gradient(650px 420px at 45% 95%, rgba(255,140,60,.07), transparent),
+    linear-gradient(180deg, rgba(0,0,0,.2), transparent),
+    #130d09;
+  border:1px solid #3a2a1c;border-radius:12px;padding:10px;overflow:hidden;
 }
 #floor{width:100%;height:auto;display:block;touch-action:manipulation}
 
-.wall{fill:none;stroke:var(--line2);stroke-width:2.5;filter:url(#rough)}
-.room{fill:rgba(255,255,255,.02);stroke:var(--line2);stroke-width:2;filter:url(#rough)}
-.screen{fill:rgba(255,255,255,.22);filter:url(#rough)}
-.stage{fill:rgba(255,255,255,.05);stroke:rgba(255,255,255,.28);stroke-width:1.5;filter:url(#rough)}
-.bar-counter{fill:rgba(255,255,255,.06);stroke:var(--gold-deep);stroke-width:1.5;filter:url(#rough)}
+/* แสงอบอุ่นแวดล้อม — ให้ความรู้สึกร้านจริงตอนกลางคืน ไม่ใช่ผังเปล่าๆ */
+.ambient-lights{pointer-events:none}
+.zone-glow{mix-blend-mode:screen;opacity:.4}
+.stage-glow{animation:flicker 5s ease-in-out infinite}
+.bar-glow{animation:flicker 4.2s ease-in-out infinite .6s}
+.beam-glow{mix-blend-mode:screen;opacity:.5}
+.wall-lamp{filter:blur(.5px)}
+.wall-lamp-glow{mix-blend-mode:screen;opacity:.6;animation:flicker 3.6s ease-in-out infinite .3s}
+.wall-frame{fill:rgba(0,0,0,.3);stroke:#6b4a2c;stroke-width:2;filter:url(#rough)}
+@keyframes flicker{
+  0%,100%{opacity:.38}
+  45%{opacity:.5}
+  50%{opacity:.32}
+  78%{opacity:.46}
+}
+@media (prefers-reduced-motion:reduce){
+  .stage-glow,.bar-glow,.wall-lamp-glow{animation:none}
+}
+
+.wall{fill:none;stroke:#4a3826;stroke-width:2.5;filter:url(#rough)}
+.room{fill:rgba(255,180,120,.03);stroke:#4a3826;stroke-width:2;filter:url(#rough)}
+.screen{fill:rgba(255,207,158,.28);filter:url(#rough)}
+.stage{fill:rgba(255,140,60,.06);stroke:rgba(255,170,110,.35);stroke-width:1.5;filter:url(#rough)}
+.bar-counter{fill:rgba(255,140,60,.08);stroke:#ff8a3c;stroke-width:1.5;filter:url(#rough)}
 .room-label{
   fill:var(--muted);font-family:var(--font-mono);font-size:15px;
   text-anchor:middle;dominant-baseline:middle;letter-spacing:.12em;
 }
 .room-label.sm{font-size:12px}
-.room-label.vert{writing-mode:vertical-rl;letter-spacing:.2em;fill:var(--gold)}
+.room-label.vert{writing-mode:vertical-rl;letter-spacing:.2em;fill:#ffb066}
 
 /* โต๊ะ */
 .t-group{cursor:pointer}
